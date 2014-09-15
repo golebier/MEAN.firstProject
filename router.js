@@ -12,24 +12,15 @@
 //             http://www.linkedin.com/pub/rados%C5%82aw-go%C5%82%C4%99biewski/70/832/35
 //
 
-var http = require("http");
-var url = require("url");
+function route(handle, pathname) {
+	console.log("About to route a request for " + pathname);
 
-function start(route, handle) {
-	function onRequest(request, response) {
-		var pathname = url.parse(request.url).pathname;
-		console.log("Request for " + pathname + " received.");
-
-		var content = route(handle, pathname);
-
-		response.writeHead(200, {"Content-Type": "text/plain"});
-		response.write(content);
-		response.end();
+	if (typeof handle[pathname] === 'function') {
+		return handle[pathname]();
+	} else {
+		console.log("No request handler found for " + pathname);
+		return "404 Not found";
 	}
-
-	http.createServer(onRequest).listen(8888);
-	
-	console.log("Server has started.");
 }
 
-exports.start = start;
+exports.route = route;

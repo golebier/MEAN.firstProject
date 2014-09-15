@@ -12,24 +12,14 @@
 //             http://www.linkedin.com/pub/rados%C5%82aw-go%C5%82%C4%99biewski/70/832/35
 //
 
-var http = require("http");
-var url = require("url");
+var server = require("./server");
+var router = require("./router");
+var requestHandlers = require("./requestHandlers");
 
-function start(route, handle) {
-	function onRequest(request, response) {
-		var pathname = url.parse(request.url).pathname;
-		console.log("Request for " + pathname + " received.");
+var handle = {}
 
-		var content = route(handle, pathname);
+handle["/"] = requestHandlers.start;
+handle["/start"] = requestHandlers.start;
+handle["/upload"] = requestHandlers.upload;
 
-		response.writeHead(200, {"Content-Type": "text/plain"});
-		response.write(content);
-		response.end();
-	}
-
-	http.createServer(onRequest).listen(8888);
-	
-	console.log("Server has started.");
-}
-
-exports.start = start;
+server.start(router.route, handle);
