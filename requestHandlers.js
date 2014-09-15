@@ -12,9 +12,15 @@
 //             http://www.linkedin.com/pub/rados%C5%82aw-go%C5%82%C4%99biewski/70/832/35
 //
 
+var exec = require("child_process").exec;
+
 function start() {
 	console.log("Request handler 'start' was called.");
-	return "Hello Start";
+	var content = "empty";
+	exec("ls -lah", function (error, stdout, stderr) {
+		content = stdout;
+	});
+	return content;
 }
 
 function upload() {
